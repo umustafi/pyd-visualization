@@ -25,6 +25,17 @@ def map_data(wait_avg):
     gmap.draw("city_wait.html")
 
 
-# Can you make this take in a city string and return a tuple of (lat, lng)?
 def location(city):
-    pass
+    params = {
+            'address' : city,
+            'sensor' : 'false',
+    }
+    url = 'http://maps.google.com/maps/api/geocode/json?%s' %(
+        urllib.urlencode(params),)
+    response = urllib2.urlopen(url)
+    result = json.load(response)
+    try:
+            lat_lng_dict = result['results'][0]['geometry']['location']
+            return (lat_lng_dict['lat'], lat_lng_dict['lng'])
+    except:
+            return ()
