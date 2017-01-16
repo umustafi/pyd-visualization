@@ -10,7 +10,7 @@ from colour import Color
 from process_file import process_data
 import geocoder
 
-UPLOAD_FOLDER = './tmp/'
+UPLOAD_FOLDER = './FlaskApp/tmp/'
 ALLOWED_EXTENSIONS = set(['csv', 'xls', 'xlsx'])
 
 app = Flask(__name__)
@@ -90,7 +90,7 @@ def render_map():
             for i in xrange(len(lats)):
                 gmap.scatter([lats[i]], [lngs[i]], colors[i], size=sizes[i], marker=False)
 
-            gmap.draw("./templates/city_wait.html")
+            gmap.draw("./FlaskApp/templates/city_wait.html")
 
         wait_avg = process_data(file)
         map_data(wait_avg)
