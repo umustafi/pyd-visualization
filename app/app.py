@@ -10,7 +10,7 @@ from colour import Color
 from process_file import process_data
 import geocoder
 
-UPLOAD_FOLDER = './FlaskApp/tmp/'
+UPLOAD_FOLDER = './app/tmp/'
 ALLOWED_EXTENSIONS = set(['csv', 'xls', 'xlsx'])
 
 app = Flask(__name__)
@@ -24,6 +24,8 @@ def allowed_file(filename):
 def index():
     if request.method == 'POST':
         files = glob.glob(app.config['UPLOAD_FOLDER'] + '*')
+        map_filepath = "./app/templates/city_wait.html"
+        files += glob.glob(map_filepath)
         for f in files:
             os.remove(f)
         file = request.files['file']
@@ -55,7 +57,7 @@ def index():
 def render_map():
     if request.method == 'POST':
         file = glob.glob(app.config['UPLOAD_FOLDER'] + '*')[0]
-        print file
+        map_filepath = "./app/templates/city_wait.html"
 
         ZOOM_SIZE = 11
         SIZE_CONSTANT = 20
@@ -85,19 +87,24 @@ def render_map():
 
             gmap = gmplot.GoogleMapPlotter(lat_center, lng_center, zoom_size)
 
-            green = Color("green")
-            colors = list(green.range_to(Color("red"), len(wait_avg)))
+            green = Color("white")
+            colors = list(green.range_to(Color("black"), len(wait_avg)))
             colors = [c.hex for c in colors]
 
-            sizes = [SIZE_CONSTANT * w[1][1] for w in wait_avg] # based on number of mentees
+            sizes = [SIZE_CONSTANT * w[1][1] for w in wait_avg] # based on
+                    # number of mentees
 
             for i in xrange(len(lats)):
-                gmap.scatter([lats[i]], [lngs[i]], colors[i], size=sizes[i], marker=False)
+                gmap.scatter(
+                        [lats[i]], [lngs[i]], colors[i], size=sizes[i],
+                        marker=False)
 
-            gmap.draw("./FlaskApp/templates/city_wait.html")
+            gmap.draw(map_filepath)
 
-        wait_avg = process_data(file)
-        map_data(wait_avg)
+        if not os.path.exists(map_filepath):
+            wait_avg = process_data(file)
+            map_data(wait_avg)
+
         return render_template('city_wait.html')
 
 
