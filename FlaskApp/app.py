@@ -45,7 +45,11 @@ def index():
     <form action="/render_map" method=post>
          <input type=submit value="Render map">
     </form>
-    """ % "<br>".join(os.listdir(app.config['UPLOAD_FOLDER'],))
+    """ % "<br>".join(
+        [os.path.basename(f) for f in
+        glob.glob(app.config['UPLOAD_FOLDER'] + '*.csv') +
+        glob.glob(app.config['UPLOAD_FOLDER'] + '*.xls') +
+        glob.glob(app.config['UPLOAD_FOLDER'] + '*.xlsx')])
 
 @app.route('/render_map', methods=['GET', 'POST'])
 def render_map():
