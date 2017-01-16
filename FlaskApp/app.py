@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import gmplot
 from colour import Color
-from visual import process_data
+from process_file import process_data
 import geocoder
 
 UPLOAD_FOLDER = './tmp/'
