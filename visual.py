@@ -1,8 +1,11 @@
 import numpy as np
 import pandas as pd
 
-def process_data(wait_file, include_matched=True):
-    wait_data = pd.read_csv(wait_file, header=0)
+def process_data(wait_file, include_matched=True, isExcel=False, sheetToRead=0):
+    if isExcel:
+        wait_data = pd.read_excel(wait_file, sheetname=sheetToRead, header=0)
+    else:
+        wait_data = pd.read_csv(wait_file, header=0)
     wait_data = wait_data[pd.notnull(wait_data["Waitlist Time (Days)"])]
     loc_wait = {}
     loc_wait_open = {}
@@ -40,3 +43,4 @@ def process_data(wait_file, include_matched=True):
         return wait_avg_open
 
 process_data("waitlist.csv")
+#process_data("waitlist.xlsx",isExcel=True,sheetToRead="Mentees")
